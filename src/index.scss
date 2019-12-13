@@ -1,0 +1,105 @@
+// Colors
+$color-primary: #6e1a52;
+$color-secondary: #ec5252;
+
+// Theme
+$theme-colors: (
+  "primary": $color-primary,
+  "secondary": $color-secondary
+);
+
+// Bootstrap
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/grid";
+
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/custom-forms";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/input-group";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/print";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/type";
+
+@import "~bootstrap/scss/utilities";
+
+// Outline
+*:focus {
+  outline: none !important;
+}
+
+// Arrow
+.dropdown-menu-arrow {
+  top: -25px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  position: relative;
+}
+.dropdown-menu-arrow:before,
+.dropdown-menu-arrow:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-width: 6.4px 8px;
+  border-style: solid;
+  border-color: transparent;
+  z-index: 1001;
+}
+.dropdown-menu-arrow:after {
+  bottom: -18px;
+  right: -8px;
+  border-bottom-color: #fff;
+}
+.dropdown-menu-arrow:before {
+  bottom: -16.4px;
+  right: -8px;
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+}
+
+// Border
+.border-md-right {
+  border-right: none;
+}
+
+// Breakpoints
+// Extra small devices (portrait phones, less than 576px)
+// SM
+@media (min-width: 575.98px) {
+}
+
+// Small devices (landscape phones, less than 768px)
+// MD
+@media (min-width: 767.98px) {
+  .border-md-right {
+    border-right: 1px solid $gray-300;
+  }
+}
+
+// Medium devices (tablets, less than 992px)
+// LG
+@media (min-width: 991.98px) {
+}
+
+// Large devices (desktops, less than 1200px)
+// XL
+@media (min-width: 1199.98px) {
+}
