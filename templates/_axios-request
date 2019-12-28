@@ -1,0 +1,13 @@
+axios
+.post(`${this.api.host}:${this.api.port}/`, {
+    // Boyd
+})
+.then(response => {
+})
+.catch(error => {
+    if (error.response) {
+        console.log(error.response.status);
+    } else {
+        // No Internet
+    }
+});

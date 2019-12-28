@@ -1,0 +1,122 @@
+<template>
+  <div class="container-fluid my-4">
+    <div class="card shadow-sm">
+      <div class="card-header">Marks</div>
+      <div class="row no-gutters">
+        <!-- Marks -->
+        <div class="col-4 border-md-right">
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item list-group-item-action"
+              v-for="mark in marks"
+              :key="mark._id"
+              v-text="mark.name"
+            />
+          </ul>
+        </div>
+
+        <div class="col-8">
+          <ul class="list-group list-group-flush">
+            <li
+              class="list-group-item list-group-item-action"
+              v-for="(student, index) in students"
+              :key="student._id"
+            >
+              <form id="marks" class="was-validated" novalidate>
+                <div class="row align-items-center">
+                  <!-- Roll -->
+                  <div class="col-2">
+                    <code>{{index+1}}</code>
+                  </div>
+
+                  <!-- Students -->
+                  <div class="col-6">
+                    <code>{{firstcap(student.user.fname)}} {{firstcap(student.user.mname)}} {{firstcap(student.user.lname)}}</code>
+                  </div>
+                  <!-- Score -->
+                  <div class="col-4">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Score"
+                      pattern="^[0-9]*\.?[0-9]+$"
+                      required
+                    />
+                  </div>
+                </div>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+// import Select from "@/components/Select.vue";
+
+export default {
+  name: "Marks",
+  components: {
+    //   Select
+  },
+  data() {
+    return {
+      loading: {
+        students__list: false,
+        marks__list: false
+      },
+
+      students: [],
+      marks: []
+    };
+  },
+
+  mounted() {
+    this.students__list();
+    this.marks__list();
+  },
+
+  methods: {
+    firstcap: function(param) {
+      return param.charAt(0).toUpperCase() + param.slice(1);
+    },
+
+    students__list: function() {
+      this.loading.students__list = true;
+
+      axios
+        .post(`${this.api.host}:${this.api.port}/class/students`, {
+          _class: "5df49712bfd7b50f74718224"
+        })
+        .then(response => {
+          this.students = response.data.prototype;
+          this.loading.students__list = false;
+        })
+        .catch(error => {
+          console.error(error);
+          this.loading.students__list = false;
+        });
+    },
+
+    marks__list: function() {
+      this.loading.marks__list = true;
+
+      axios
+        .post(`${this.api.host}:${this.api.port}/collection/marks/list`, {
+          _class: "5df49712bfd7b50f74718224"
+        })
+        .then((response) => {
+          this.marks = response.data.prototype.semester.marks;
+          this.loading.marks__list = false;
+        })
+        .catch(error => {
+          console.error(error);
+          this.loading.marks__list = false;
+        });
+    }
+  }
+};
+</script>

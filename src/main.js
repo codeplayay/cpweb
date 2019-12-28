@@ -3,12 +3,12 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+// Bootstrap
 import "jquery/dist/jquery.slim";
 import "popper.js/dist/popper";
 import "bootstrap/js/dist/tooltip";
 import "bootstrap/js/dist/popover";
 import "bootstrap/js/dist/dropdown";
-import "bootstrap/js/dist/toast";
 import "bootstrap/js/dist/collapse";
 import "bootstrap/js/dist/util";
 import "./index.scss";
@@ -16,7 +16,7 @@ import "./index.scss";
 Vue.config.productionTip = false;
 
 Vue.mixin({
-  data: function () {
+  data: function() {
     return {
       get api() {
         return {
@@ -28,12 +28,12 @@ Vue.mixin({
       get app() {
         return {
           name: "CloudPlay"
-        }
+        };
       },
 
       get roles() {
         return ["Student", "Teacher"];
-      },
+      }
     };
   }
 });

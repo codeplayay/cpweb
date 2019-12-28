@@ -1,94 +1,82 @@
 <template>
-  <div class="h-100 d-flex align-items-center justify-content-center login-container">
-    <div class="card login-card shadow-sm mx-2 my-4">
-      <div class="card-body pb-2">
-        <div class="h-40">
-          <!-- Logo -->
-          <img src="@/assets/logo.svg" alt="logo" class="login-logo" />
+  <div class="login h-100">
+    <div
+      class="h-100 d-flex align-items-center justify-content-center login-container"
+    >
+      <div class="card login-card shadow-sm mx-2 my-4">
+        <!-- CloudPlay -->
+        <div class="card-body bg-light pb-2 border-bottom">
+          <div class="h-40">
+            <img src="@/assets/logo.svg" alt="logo" class="login-logo" />
+          </div>
+          <h4 class="card-title text-center">{{ app.name }}</h4>
         </div>
 
-        <h4 class="card-title text-center text-primary">{{app.name}}</h4>
-      </div>
-      <!-- Header -->
-      <div class="card-header">Login</div>
-      <div class="card-body">
-        <form id="login" class="was-validated" novalidate>
-          <div class="form-row">
-            <!-- UID -->
-            <div class="form-group col-12">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="UID"
-                data-toggle="popover"
-                data-trigger="focus"
-                data-placement="top"
-                title="UID"
-                data-content="Your login ID"
-                v-model="user.uid"
-                pattern="^([A-Z0-9]{1,16})$"
-                required
-              />
+        <div class="card-body">
+          <form
+            id="login"
+            v-bind:class="{ 'was-validated': form.login.wasValidated }"
+            novalidate
+          >
+            <div class="form-row">
+              <!-- UID -->
+              <div class="form-group col-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="UID"
+                  v-model="form.login.uid"
+                  pattern="^([A-Z0-9]{1,16})$"
+                  required
+                />
+              </div>
+              <!-- Password -->
+              <div class="form-group col-12">
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  v-model="form.login.password"
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary btn-block"
+                @click="login()"
+              >
+                Login
+              </button>
             </div>
-            <!-- Password -->
-            <div class="form-group col-12">
-              <input
-                type="password"
-                class="form-control"
-                placeholder="Password"
-                data-toggle="popover"
-                data-trigger="focus"
-                data-placement="top"
-                title="Password"
-                data-content="Your little secret"
-                v-model="user.password"
-                required
-              />
-            </div>
-            <button type="button" class="btn btn-primary btn-block" @click="login">Login</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import $ from "jquery";
-
 export default {
   name: "Login",
   data() {
     return {
-      user: {
-        uid: "",
-        password: ""
+      form: {
+        login: {
+          wasValidated: false,
+          uid: "",
+          password: ""
+        }
       }
     };
   },
 
-  mounted() {
-    this.popper();
-  },
-
-  updated() {
-    this.popper();
-  },
-
   methods: {
-    popper: function() {
-      $('[data-toggle="tooltip"]').tooltip();
-      $('[data-toggle="popover"]').popover();
-      $(".popover-dismiss").popover({
-        trigger: "focus"
-      });
-    },
     login: function() {
-      if (document.getElementById("login").checkValidity())
+      if (document.getElementById("login").checkValidity()) {
         this.$store
           .dispatch("login", {
-            uid: this.user.uid,
-            password: this.user.password,
+            uid: this.form.login.uid,
+            password: this.form.login.password,
             url: `${this.api.host}:${this.api.port}/user/login`
           })
           .then(() => {
@@ -97,6 +85,9 @@ export default {
           .catch(() => {
             console.log(`Authentication failed`);
           });
+      } else {
+        this.form.login.wasValidated = true;
+      }
     }
   }
 };

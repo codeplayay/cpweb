@@ -14,29 +14,32 @@
       class="navbar-toggler"
       type="button"
       data-toggle="collapse"
-      data-target="#navbar__collapse"
-      aria-controls="navbar__collapse"
+      data-target="#navbarCollapse"
+      aria-controls="navbarCollapse"
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbar__collapse">
+    <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <!-- Organization -->
         <li class="nav-item dropdown">
           <a
             class="nav-link dropdown-toggle text-decoration-none"
             href="#"
-            id="navbar__master"
+            id="navbarOrganization"
             role="button"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
-          >Master</a>
-          <div class="dropdown-menu" aria-labelledby="navbar__master">
-            <a class="dropdown-item" href="#/organization">Organization</a>
+            >Organization</a
+          >
+          <div class="dropdown-menu" aria-labelledby="navbarOrganization">
+            <a class="dropdown-item" href="#/organization/dncschema"
+              >Organization Schema</a
+            >
           </div>
         </li>
         <!-- User -->
@@ -44,18 +47,25 @@
           <a
             class="nav-link dropdown-toggle text-decoration-none"
             href="#"
-            id="navbar__user"
+            id="navbarUser"
             role="button"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
-          >User</a>
-          <div class="dropdown-menu" aria-labelledby="navbar__user">
-            <a class="dropdown-item" href="#/user/student/register">Student Registration</a>
-            <a class="dropdown-item" href="#/user/teacher/register">Teacher Registration</a>
+            >User</a
+          >
+          <div class="dropdown-menu" aria-labelledby="navbarUser">
+            <a class="dropdown-item" href="#/user/student/register"
+              >Student Registration</a
+            >
+            <a class="dropdown-item" href="#/user/teacher/register"
+              >Teacher Registration</a
+            >
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#/user/teacher/hod">HOD</a>
-            <a class="dropdown-item" href="#/user/teacher/classteacher">Class Teacher</a>
+            <a class="dropdown-item" href="#/user/teacher/classteacher"
+              >Class Teacher</a
+            >
           </div>
         </li>
         <!-- Class Teacher -->
@@ -63,14 +73,34 @@
           <a
             class="nav-link dropdown-toggle text-decoration-none"
             href="#"
-            id="navbar__classteacher"
+            id="navbarClassTeacher"
             role="button"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
-          >Class Teacher</a>
-          <div class="dropdown-menu" aria-labelledby="navbar__classteacher">
-            <a class="dropdown-item" href="#/subject">Subjects</a>
+            >Class Teacher</a
+          >
+          <div class="dropdown-menu" aria-labelledby="navbarClassTeacher">
+            <a class="dropdown-item" href="#/subjects/schema"
+              >Subjects Schema</a
+            >
+          </div>
+        </li>
+        <!-- Teacher -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle text-decoration-none"
+            href="#"
+            id="navbarTeacher"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            >Teacher</a
+          >
+          <div class="dropdown-menu" aria-labelledby="navbarTeacher">
+            <a class="dropdown-item" href="#/collection/marks">Marks</a>
+            <a class="dropdown-item" href="#/notice/prepare">Notice</a>
           </div>
         </li>
       </ul>

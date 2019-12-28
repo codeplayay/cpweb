@@ -1,72 +1,86 @@
 <template>
-  <div class="container my-4">
+  <div class="hod">
     <div class="card shadow-sm">
       <div class="card-header">HOD</div>
 
       <div class="row no-gutters">
         <div class="col-12 col-md-4 border-md-right">
           <!-- Loading -->
-          <div v-if="loading.list" class="d-flex justify-content-center p-4">
-            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" />
+          <div
+            v-if="loading.listDepartments"
+            class="d-flex justify-content-center p-4"
+          >
+            <span
+              class="spinner-border text-secondary"
+              role="status"
+              aria-hidden="true"
+            />
           </div>
 
           <!-- Empty list -->
-          <div class="d-flex justify-content-center p-3" v-else-if="departments.length === 0">
-            <img src="@/assets/empty.png" width="180" />
-          </div>
+          <EmptyResponse
+            text="Empty list"
+            v-else-if="departments.length === 0"
+          />
 
+          <!-- Loaded -->
           <div class="list-group list-group-flush" v-else>
             <button
               type="button"
               class="list-group-item list-group-item-action"
               v-for="department in departments"
-              v-bind:class="{ active: department._id == selected.department._id }"
+              v-bind:class="{
+                active: department._id == selected.department._id
+              }"
               :key="department._id"
               v-text="department.name"
-              @click="department__select(department)"
+              @click="selectDepartment(department)"
             />
           </div>
         </div>
 
         <div class="col-12 col-md-8">
-          <!-- Autocomplete -->
+          <!-- AutocompleteUser -->
           <div class="card-header" v-if="selected.department._id !== -1">
             <div class="form-group">
               <label>Select user</label>
-              <Autocomplete get="user/teacher/autocomplete" @update="user__select" />
+              <AutocompleteUser
+                get="user/teacher/autocomplete"
+                @update="selectUser"
+              />
             </div>
             <!-- Register -->
             <div class="d-flex justify-content-end">
-              <button
-                class="btn btn-primary btn-sm"
-                type="button"
-                @click="update"
-                :disabled="loading.update"
-                data-toggle="tooltip"
-                title="Set this user as HOD"
-              >
-                Update
-                <!-- Loading -->
-                <span
-                  class="spinner-grow spinner-grow-sm"
-                  role="status"
-                  aria-hidden="true"
-                  v-if="loading.update"
-                />
-              </button>
+              <!-- Update HOD button -->
+              <ButtonAsync
+                tooltip="Set this user as HOD"
+                text="Update HOD"
+                :loading="loading.updateHOD"
+                @click.native="updateHOD()"
+              />
             </div>
           </div>
 
-          <div v-if="!loading.list && selected.department._id !== -1">
+          <div
+            v-if="!loading.listDepartments && selected.department._id !== -1"
+          >
             <!-- Loading -->
-            <div v-if="loading.get" class="d-flex justify-content-center p-4">
-              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" />
+            <div
+              v-if="loading.getHOD"
+              class="d-flex justify-content-center p-4"
+            >
+              <span
+                class="spinner-border text-secondary"
+                role="status"
+                aria-hidden="true"
+              />
             </div>
 
             <div class="card-body" v-else>
-              <div class="d-flex justify-content-center p-3" v-if="hod._id === -1">
-                <img src="@/assets/empty.png" width="180" />
-              </div>
+              <EmptyResponse
+                text="No HOD allocated"
+                v-if="selected.hod._id === -1"
+              />
 
               <!-- Profile -->
               <div v-else>
@@ -78,10 +92,15 @@
                     width="180"
                   />
                 </div>
-                <h3
+                <h3 class="text-center font-weight-normal mt-2">
+                  {{ firstcap(selected.hod.user.fname) }}
+                  {{ firstcap(selected.hod.user.mname) }}
+                  {{ firstcap(selected.hod.user.lname) }}
+                </h3>
+                <h5
                   class="text-center font-weight-normal mt-2"
-                >{{firstcap(hod.user.fname)}} {{firstcap(hod.user.mname)}} {{firstcap(hod.user.lname)}}</h3>
-                <h5 class="text-center font-weight-normal mt-2" v-text="selected.department.name" />
+                  v-text="selected.department.name"
+                />
               </div>
             </div>
           </div>
@@ -94,29 +113,33 @@
 <script>
 import axios from "axios";
 import $ from "jquery";
-import Autocomplete from "@/components/Autocomplete.vue";
+import AutocompleteUser from "@/components/AutocompleteUser.vue";
+import EmptyResponse from "@/components/EmptyResponse.vue";
+import ButtonAsync from "@/components/ButtonAsync.vue";
 
 export default {
   name: "HOD",
   components: {
-    Autocomplete
+    AutocompleteUser,
+    EmptyResponse,
+    ButtonAsync
   },
   data() {
     return {
       departments: [],
-      hod: {
-        _id: -1
-      },
       loading: {
-        list: false,
-        update: false,
-        get: false
+        listDepartments: false,
+        updateHOD: false,
+        getHOD: false
       },
       selected: {
         user: {
           _id: -1
         },
         department: {
+          _id: -1
+        },
+        hod: {
           _id: -1
         }
       }
@@ -125,7 +148,7 @@ export default {
 
   mounted() {
     this.popper();
-    this.list();
+    this.listDepartments();
   },
 
   updated() {
@@ -145,14 +168,14 @@ export default {
       });
     },
 
-    list: function() {
-      this.loading.list = true;
+    listDepartments: function() {
+      this.loading.listDepartments = true;
 
       axios
         .post(`${this.api.host}:${this.api.port}/department/list`)
         .then(response => {
           this.departments = response.data.prototype;
-          this.loading.list = false;
+          this.loading.listDepartments = false;
         })
         .catch(error => {
           console.error(error);
@@ -160,51 +183,52 @@ export default {
         });
     },
 
-    user__select: function(user) {
+    selectUser: function(user) {
       this.selected.user = user;
     },
 
-    department__select: function(department) {
+    selectDepartment: function(department) {
       this.selected.department = department;
-      this.get();
+      this.getHOD();
     },
 
-    get: function() {
+    getHOD: function() {
       if (this.selected.department._id !== -1) {
-        this.loading.get = true;
+        this.loading.getHOD = true;
         axios
           .post(`${this.api.host}:${this.api.port}/user/teacher/hod/get`, {
             department: this.selected.department._id
           })
           .then(response => {
-            this.hod = response.data.prototype;
-            this.loading.get = false;
+            this.selected.hod = response.data.prototype;
+            this.loading.getHOD = false;
           })
           .catch(error => {
             console.error(error);
-            this.loading.get = false;
+            this.loading.getHOD = false;
           });
       }
     },
 
-    update: function() {
+    updateHOD: function() {
       if (
         this.selected.user._id !== -1 &&
         this.selected.department._id !== -1
       ) {
-        this.loading.update = true;
+        this.loading.updateHOD = true;
         axios
           .post(`${this.api.host}:${this.api.port}/user/teacher/hod/update`, {
-            user: this.selected.user._id,
-            department: this.selected.department._id
+            newHODId: this.selected.user._id,
+            department: this.selected.department._id,
+            oldHODPrototype: this.selected.hod._id
           })
-          .then(response => {
-            console.log(response.data);
-            this.loading.update = false;
+          .then(() => {
+            this.getHOD();
+            this.loading.updateHOD = false;
           })
           .catch(error => {
             console.error(error);
-            this.loading.update = false;
+            this.loading.updateHOD = false;
           });
       }
     }

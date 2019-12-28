@@ -8,8 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // User details
-    user: null,
-
+    user: null
   },
   mutations: {
     logout(state) {
@@ -30,7 +29,7 @@ export default new Vuex.Store({
       localStorage.setItem("token", payload.token);
 
       router.push("/home");
-    },
+    }
   },
   actions: {
     logout({ commit }) {

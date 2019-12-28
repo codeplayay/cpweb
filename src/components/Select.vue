@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown">
+  <div class="select">
     <input
       type="text"
       class="form-control"
@@ -28,21 +28,23 @@
 
       <!-- Empty list -->
       <div v-else class="px-3">
-        <div class="d-flex justify-content-center">
-          <img src="@/assets/empty.png" width="180" />
-        </div>
+        <EmptyResponse text="Empty list" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import EmptyResponse from "@/components/EmptyResponse";
 import axios from "axios";
 
 export default {
   name: "Select",
   props: {
     get: String
+  },
+  components: {
+    EmptyResponse
   },
   data() {
     return {
@@ -77,8 +79,13 @@ export default {
           this.select(this.options[0]);
         })
         .catch(error => {
+          if (error.response) {
+            console.log(error.response.status);
+          } else {
+            // No Internet
+          }
+
           this.loading.fetch = false;
-          console.error(error);
         });
     }
   },
@@ -95,5 +102,3 @@ input {
   background-color: white !important;
 }
 </style>
-
-

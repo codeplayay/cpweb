@@ -1,16 +1,17 @@
 <template>
-  <div class="container my-4">
+  <div class="dnc-schema">
     <div class="card shadow-sm">
       <div class="card-header">Organization</div>
       <div class="card-body">
         <div class="row">
           <div class="col-12 col-md-6">
-            <Departments @update="department__select" />
+            <Departments @update="selectDepartment" />
           </div>
           <div class="col-12 col-md-6">
-            <div v-if="department._id === -1" class="d-flex justify-content-center">
-              <img src="@/assets/empty.png" width="180" />
-            </div>
+            <EmptyResponse
+              text="Select department"
+              v-if="department._id === -1"
+            />
             <Classes v-else :department="department" />
           </div>
         </div>
@@ -22,12 +23,14 @@
 <script>
 import Departments from "@/components/organization/Departments.vue";
 import Classes from "@/components/organization/Classes.vue";
+import EmptyResponse from "@/components/EmptyResponse";
 
 export default {
-  name: "Organization",
+  name: "DnCSchema",
   components: {
     Departments,
-    Classes
+    Classes,
+    EmptyResponse
   },
   data() {
     return {
@@ -37,7 +40,7 @@ export default {
     };
   },
   methods: {
-    department__select: function(department) {
+    selectDepartment: function(department) {
       this.department = department;
     }
   }

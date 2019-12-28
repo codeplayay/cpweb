@@ -1,26 +1,8 @@
 <template>
-  <div class="container my-4">
+  <div class="register">
     <div class="card shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center py-2">
+      <div class="card-header">
         <span>Teacher Registration Form</span>
-        <!-- Register -->
-        <button
-          class="btn btn-primary btn-sm"
-          type="button"
-          @click="register()"
-          :disabled="loading.register"
-          data-toggle="tooltip"
-          title="Register this user"
-        >
-          Register
-          <!-- Loading -->
-          <span
-            class="spinner-grow spinner-grow-sm"
-            role="status"
-            aria-hidden="true"
-            v-if="loading.create"
-          />
-        </button>
       </div>
 
       <div class="row">
@@ -30,7 +12,13 @@
         <div class="col-12 col-md-9">
           <div class="card-body">
             <!-- Form -->
-            <form id="teacher__register" class="was-validated" novalidate>
+            <form
+              id="registerTeacher"
+              v-bind:class="{
+                'was-validated': form.registerTeacher.wasValidated
+              }"
+              novalidate
+            >
               <div class="form-row">
                 <!-- First name -->
                 <div class="form-group col-12 col-md-4">
@@ -42,7 +30,7 @@
                     data-trigger="focus"
                     data-placement="top"
                     title="First Name"
-                    v-model="user.fname"
+                    v-model="form.registerTeacher.fname"
                     pattern="^([A-Za-z]{1,24})$"
                     data-content="First name can contain only alphabets"
                     required
@@ -58,7 +46,7 @@
                     data-trigger="focus"
                     data-placement="top"
                     title="Middle Name"
-                    v-model="user.mname"
+                    v-model="form.registerTeacher.mname"
                     pattern="^([A-Za-z]{1,24})$"
                     data-content="Middle name can contain only alphabets"
                     required
@@ -75,9 +63,21 @@
                     data-placement="top"
                     title="Last Name"
                     data-content="Last name can contain only alphabets"
-                    v-model="user.lname"
+                    v-model="form.registerTeacher.lname"
                     pattern="^([A-Za-z]{1,24})$"
                     required
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group d-flex justify-content-end col-12">
+                  <!-- Create button -->
+                  <ButtonAsync
+                    tooltip="Register this user"
+                    text="Add"
+                    :loading="loading.registerTeacher"
+                    @click.native="registerTeacher()"
                   />
                 </div>
               </div>
@@ -90,21 +90,28 @@
 </template>
 
 <script>
+import ButtonAsync from "@/components/ButtonAsync";
 import axios from "axios";
 import $ from "jquery";
 
 export default {
   name: "Register",
+  components: {
+    ButtonAsync
+  },
   data() {
     return {
       loading: {
-        register: false
+        registerTeacher: false
       },
-      user: {
-        fname: "",
-        mname: "",
-        lname: ""
-      },
+      form: {
+        registerTeacher: {
+          wasValidated: false,
+          fname: "",
+          mname: "",
+          lname: ""
+        }
+      }
     };
   },
 
@@ -125,25 +132,31 @@ export default {
       });
     },
 
-    register: function() {
-      if (document.getElementById("teacher__register").checkValidity()) {
-        this.loading.register = true;
+    registerTeacher: function() {
+      if (document.getElementById("registerTeacher").checkValidity()) {
+        this.loading.registerTeacher = true;
 
         axios
           .post(`${this.api.host}:${this.api.port}/user/teacher/register`, {
-            fname: this.user.fname,
-            mname: this.user.mname,
-            lname: this.user.lname
+            fname: this.form.registerTeacher.fname,
+            mname: this.form.registerTeacher.mname,
+            lname: this.form.registerTeacher.lname
           })
           .then(() => {
-            this.loading.register = false;
+            this.loading.registerTeacher = false;
           })
           .catch(error => {
-            console.error(error);
-            this.loading.register = false;
+            if (error.response) {
+              console.log(error.response.status);
+            } else {
+              // No Internet
+            }
+            this.loading.registerTeacher = false;
           });
+      } else {
+        this.form.registerTeacher.wasValidated = true;
       }
-    },
+    }
   }
 };
 </script>

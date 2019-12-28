@@ -23,16 +23,24 @@ const routes = [
     component: () => import("@/views/user/teacher/Register.vue")
   },
   {
-    path: "/organization",
-    component: () => import("@/views/organization/Organization.vue")
+    path: "/organization/dncschema",
+    component: () => import("@/views/organization/DnCSchema.vue")
   },
   {
-    path: "/subject",
-    component: () => import("@/views/subject/Subject.vue")
+    path: "/subjects/schema",
+    component: () => import("@/views/subjects/Schema.vue")
   },
   {
     path: "/user/teacher/hod",
     component: () => import("@/views/user/teacher/HOD.vue")
+  },
+  {
+    path: "/collection/marks",
+    component: () => import("@/views/collection/Marks.vue")
+  },
+  {
+    path: "/notice/prepare",
+    component: () => import("@/views/notice/Prepare.vue")
   }
 ];
 

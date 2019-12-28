@@ -1,139 +1,134 @@
 <template>
-  <div class="card w-100 mb-2">
-    <!-- Header -->
-    <div class="card-header d-flex justify-content-between align-items-center py-2">
-      <span>Departments</span>
-
-      <!-- Create button -->
-      <button
-        class="btn btn-primary btn-sm"
-        type="button"
-        @click="create()"
-        :disabled="loading.create"
-        data-toggle="tooltip"
-        title="Add a new department to your organization"
+  <div class="departments">
+    <div class="card w-100 mb-2">
+      <!-- Header -->
+      <div
+        class="card-header d-flex justify-content-between align-items-center py-2"
       >
-        Create
-        <!-- Loading -->
-        <span
-          class="spinner-grow spinner-grow-sm"
-          role="status"
-          aria-hidden="true"
-          v-if="loading.create"
+        <span>Departments</span>
+
+        <!-- Create button -->
+        <ButtonAsync
+          tooltip="Add a new department to your organization"
+          text="Add"
+          :loading="loading.createDepartment"
+          @click.native="createDepartment()"
         />
-      </button>
-    </div>
+      </div>
 
-    <!-- List -->
-    <ul class="list-group list-group-flush">
-      <!-- Loading -->
-      <li class="d-flex justify-content-center p-3" v-if="loading.list">
-        <div class="spinner-border text-secondary" role="status">
-          <span class="sr-only">Loading</span>
-        </div>
-      </li>
-
-      <!-- Empty list -->
-      <li class="list-group-item" v-else-if="departments.length === 0">
-        <div class="d-flex justify-content-center">
-          <img src="@/assets/empty.png" width="180" />
-        </div>
-      </li>
-
-      <!-- List loaded -->
-      <li
-        v-else
-        class="list-group-item"
-        v-for="(department, index) in departments"
-        :key="department._id"
-      >
-        <div
-          class="custom-control custom-radio custom-control-inline"
-          data-toggle="tooltip"
-          title="Edit department"
+      <!-- List -->
+      <ul class="list-group list-group-flush">
+        <!-- Loading -->
+        <li
+          class="d-flex justify-content-center p-3"
+          v-if="loading.listDepartments"
         >
-          <input
-            type="radio"
-            :id="department._id"
-            name="department"
-            class="custom-control-input"
-            @click="select(department, index)"
-          />
-          <label class="custom-control-label" :for="department._id" v-text="department.name" />
-        </div>
+          <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading</span>
+          </div>
+        </li>
 
-        <!-- Edit -->
-        <div v-if="department._id === selected.department._id" class="card mt-2">
-          <div class="card-header py-2">Edit {{ department.name }}</div>
-          <div class="card-body">
-            <!-- Form -->
-            <form id="department__update" class="was-validated" novalidate>
-              <!-- Department name -->
-              <div class="form-group">
-                <label>Department name</label>
-                <div class="input-group input-group-sm">
-                  <input
-                    type="text"
-                    class="form-control"
-                    :placeholder="department.name"
-                    v-model="selected.department.name"
-                    aria-describedby="button-edit"
-                    data-toggle="popover"
-                    data-trigger="focus"
-                    data-placement="top"
-                    title="Department name"
-                    pattern="^([A-Za-z0-9\s]{1,128})$"
-                    data-content="Department name can contain only alphanumeric characters"
-                    required
-                  />
-                  <div class="input-group-append">
-                    <!-- Department update -->
-                    <button
-                      class="btn btn-secondary"
-                      type="button"
-                      id="button-edit"
-                      :disabled="loading.update"
-                      @click="update()"
-                      data-toggle="tooltip"
-                      title="Save changes made to selected department"
-                    >
-                      Update
-                      <!-- Loading -->
-                      <span
-                        class="spinner-grow spinner-grow-sm"
-                        role="status"
-                        aria-hidden="true"
-                        v-if="loading.update"
+        <!-- Empty list -->
+        <li class="list-group-item" v-else-if="departments.length === 0">
+          <EmptyResponse text="Create a department" />
+        </li>
+
+        <!-- List loaded -->
+        <li
+          v-else
+          class="list-group-item"
+          v-for="(department, index) in departments"
+          :key="department._id"
+        >
+          <div
+            class="custom-control custom-radio custom-control-inline"
+            data-toggle="tooltip"
+            title="Edit department"
+          >
+            <input
+              type="radio"
+              :id="department._id"
+              name="department"
+              class="custom-control-input"
+              @click="selectDepartment(department, index)"
+            />
+            <label
+              class="custom-control-label"
+              :for="department._id"
+              v-text="department.name"
+            />
+          </div>
+
+          <!-- Edit -->
+          <div
+            v-if="department._id === selectedDepartment.data._id"
+            class="card mt-2"
+          >
+            <div class="card-header py-2">Edit {{ department.name }}</div>
+            <div class="card-body">
+              <!-- Form -->
+              <form id="updateDepartment" class="was-validated" novalidate>
+                <!-- Department name -->
+                <div class="form-group">
+                  <label>Department name</label>
+                  <div class="input-group input-group-sm">
+                    <input
+                      type="text"
+                      class="form-control"
+                      :placeholder="department.name"
+                      v-model="selectedDepartment.data.name"
+                      aria-describedby="button-edit"
+                      data-toggle="popover"
+                      data-trigger="focus"
+                      data-placement="top"
+                      title="Department name"
+                      pattern="^([A-Za-z0-9\s]{1,128})$"
+                      data-content="Department name can contain only alphanumeric characters"
+                      required
+                    />
+                    <div class="input-group-append">
+                      <!-- Department update -->
+                      <ButtonAsync
+                        tooltip="Save changes made to the selected department"
+                        text="Update"
+                        :loading="loading.updateDepartment"
+                        @click.native="updateDepartment()"
                       />
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+import ButtonAsync from "@/components/ButtonAsync";
+import EmptyResponse from "@/components/EmptyResponse";
 import axios from "axios";
 import $ from "jquery";
 
 export default {
   name: "Departments",
+  components: {
+    ButtonAsync,
+    EmptyResponse
+  },
   data() {
     return {
       loading: {
-        create: false,
-        list: false,
-        update: false
+        createDepartment: false,
+        listDepartments: false,
+        updateDepartment: false
       },
       departments: [],
-      selected: {
+      selectedDepartment: {
         index: -1,
-        department: {
+        data: {
           _id: -1
         }
       }
@@ -141,7 +136,7 @@ export default {
   },
 
   mounted() {
-    this.list();
+    this.listDepartments();
     this.popper();
   },
 
@@ -158,29 +153,32 @@ export default {
       });
     },
 
-    select: function(department, index) {
-      this.selected.department = { ...department };
-      this.selected.index = index;
+    selectDepartment: function(department, index) {
+      this.selectedDepartment.data = { ...department };
+      this.selectedDepartment.index = index;
       this.$emit("update", department);
     },
 
-    list: function() {
-      this.loading.list = true;
-
+    listDepartments: async function() {
+      this.loading.listDepartments = true;
       axios
         .post(`${this.api.host}:${this.api.port}/department/list`)
         .then(response => {
           this.departments = response.data.prototype;
-          this.loading.list = false;
+          this.loading.listDepartments = false;
         })
         .catch(error => {
-          console.error(error);
-          this.loading.list = false;
+          if (error.response) {
+            console.log(error.response.status);
+          } else {
+            // No Internet
+          }
+          this.loading.listDepartments = false;
         });
     },
 
-    create: function() {
-      this.loading.create = true;
+    createDepartment: function() {
+      this.loading.createDepartment = true;
 
       axios
         .post(`${this.api.host}:${this.api.port}/department/create`, {
@@ -188,30 +186,39 @@ export default {
         })
         .then(response => {
           this.departments.push(response.data.prototype);
-          this.loading.create = false;
+          this.loading.createDepartment = false;
         })
         .catch(error => {
-          console.error(error);
-          this.loading.create = false;
+          if (error.response) {
+            console.log(error.response.status);
+          } else {
+            // No Internet
+          }
+          this.loading.createDepartment = false;
         });
     },
 
-    update: function() {
-      if (document.getElementById("department__update").checkValidity()) {
-        this.loading.update = true;
+    updateDepartment: function() {
+      if (document.getElementById("updateDepartment").checkValidity()) {
+        this.loading.updateDepartment = true;
 
         axios
           .post(`${this.api.host}:${this.api.port}/department/update`, {
-            _id: this.selected.department._id,
-            name: this.selected.department.name
+            department: this.selectedDepartment.data._id,
+            name: this.selectedDepartment.data.name
           })
           .then(response => {
-            this.departments[this.selected.index] = response.data.prototype;
-            this.loading.update = false;
+            this.departments[this.selectedDepartment.index] =
+              response.data.prototype;
+            this.loading.updateDepartment = false;
           })
           .catch(error => {
-            console.error(error);
-            this.loading.update = false;
+            if (error.response) {
+              console.log(error.response.status);
+            } else {
+              // No Internet
+            }
+            this.loading.updateDepartment = false;
           });
       }
     }

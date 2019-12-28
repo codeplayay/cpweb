@@ -39,6 +39,11 @@ $theme-colors: (
 
 @import "~bootstrap/scss/utilities";
 
+// Cursor
+.cursor-pointer {
+  cursor: pointer;
+}
+
 // Outline
 *:focus {
   outline: none !important;

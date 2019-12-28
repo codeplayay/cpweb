@@ -1,0 +1,15 @@
+<template>
+  <div class="vue">
+    <div class="card shadow-sm">
+      <div class="card-header">Vue</div>
+      <div class="card-body">
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Vue"
+};
+</script>

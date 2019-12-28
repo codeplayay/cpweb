@@ -1,8 +1,10 @@
 <template>
-  <div id="app" class="h-100">
+  <main id="app" class="h-100">
     <Nav />
-    <router-view />
-  </div>
+    <div class="container my-4 h-100">
+      <router-view />
+    </div>
+  </main>
 </template>
 
 <style></style>
@@ -15,7 +17,6 @@ export default {
   components: {
     Nav
   },
-  mounted() {
-  }
+  mounted() {}
 };
 </script>

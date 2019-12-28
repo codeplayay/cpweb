@@ -6,7 +6,7 @@
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
-      @keyup="input__change"
+      @keyup="inputChange"
       v-model="selected.label"
     />
     <div class="dropdown-menu mt-2 w-100">
@@ -23,11 +23,14 @@
 
       <div v-else>
         <div
-          class="dropdown-item"
+          class="dropdown-item cursor-pointer"
           v-for="option in options"
           :key="option._id"
           @click="select(option)"
-        >{{firstcap(option.fname)}} {{firstcap(option.mname)}} {{first(option.lname)}}</div>
+        >
+          {{ firstcap(option.fname) }} {{ firstcap(option.mname) }}
+          {{ firstcap(option.lname) }}
+        </div>
       </div>
     </div>
   </div>
@@ -70,7 +73,7 @@ export default {
       this.$emit("update", this.selected);
     },
 
-    input__change: function(event) {
+    inputChange: function(event) {
       // 32 : Whitespace
       // 13 :  Carriage return
       if (event.keyCode == 32 || event.keyCode == 13) {

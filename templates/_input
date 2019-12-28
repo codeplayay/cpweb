@@ -1,0 +1,19 @@
+<div class="form-group col-*">
+    <label>Class name</label>
+    <input
+        type="text"
+        class="form-control"
+        :placeholder=""
+        v-model=""
+        /* If tooltip is required
+        data-toggle="popover"
+        data-trigger="focus"
+        data-placement="top"
+        title="Class name"
+        data-content="Class name can contain only alphanumeric characters"
+        */
+        pattern="^([A-Za-z0-9\s]{1,128})$"
+        required
+    />
+</div>
+                
